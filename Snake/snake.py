@@ -36,13 +36,29 @@ pygame.display.update()
 clock=pygame.time.Clock()
 radius = 5
 snakeSpeed = .05
-velX = 0
+velX = 1
 velY = 0
 done = False
 posx = ScreenWidth / 2
 posy = ScreenHeight / 2
 x = ScreenWidth / 2
 y = ScreenHeight / 2
+
+#tail positioning
+tailX = []
+tailY = []
+
+#functions
+def show():
+    pass
+def update():
+    pass
+
+def death(tailX, tailY):
+    if (x > ScreenWidth - 1) or (x < 1) or (y > ScreenHeight - 1) or (y < 1):
+        tailX = []
+        tailY = []
+        return(tailX, tailY)
 
 def spawnapple():
     appleX = random.randint(20, 380)
@@ -90,6 +106,14 @@ while not done:
     #snake interaction with apple
     if x == appleX and y == appleY:
         appleX, appleY = spawnapple()
+    if appleX == 0:
+        appleX, appleY = spawnapple()
+    tailX, tailY = death(tailX, tailY)
+    
+    x, y, appleX, appleY = update(x, y, appleX, appleY)
+
+    show(x, y)
+
     
     
     
@@ -97,5 +121,6 @@ while not done:
     #rework what is on the screen blit, etc.
     #refresh the screen
     pygame.display.update()
-    
+    clock.tick(60)
+
 sys.exit()
