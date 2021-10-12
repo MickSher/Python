@@ -17,6 +17,8 @@ ScreenHeight = 800
 ScreenWidth = 800
 screen = pygame.display.set_mode((ScreenWidth, ScreenHeight))
 
+
+
 #loading an image
 #carimp=pygame.image.load("RedCar.jpg")
 #car1=pygame.transform.scale(carimp,(50,50))
@@ -63,7 +65,16 @@ def death(tailX, tailY, x, y):
         x = ScreenWidth / 2
         y = ScreenHeight / 2
         print("Snake reset.")
+        message("Snake reset.", red)
+
+
     return(tailX, tailY, x, y)
+
+fontStyle = pygame.font.SysFont(None, 50)
+
+def message(m, c):
+    mes = fontStyle.render(m, True, c)
+    screen.blit(m, [ScreenWidth/2, ScreenHeight/2])
 
 def spawnapple():
     appleX = random.randint(20, 380)
@@ -114,6 +125,8 @@ while not done:
         appleX = 0
         #Add a segment to the snake
 
+
+
     #snake interaction with apple
     if appleX == 0:
         appleX, appleY = spawnapple()
@@ -121,7 +134,6 @@ while not done:
     x, y, appleX, appleY = sUpdate(x, y, appleX, appleY)
 
     #show(x, y)
-
     
     
     
