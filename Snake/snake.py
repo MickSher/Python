@@ -49,13 +49,17 @@ y = ScreenHeight / 2
 #tail positioning
 tailX = []
 tailY = []
+totalTail = 0
 
 #functions
+
 def show():
     pass
 def sUpdate(x, y, appleX, appleY):
-    snake = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
+    snake = pygame.draw.rect(screen, blue, (x, y, 10, 10), 3)
     apple = pygame.draw.circle(screen, red, (appleX, appleY), radius, 0)
+    for i in range(len(tailX) - 1):
+        pygame.draw.rect(screen, blue, (tailX[i], tailY[i], 10, 10))
     return(x, y, appleX, appleY)
 
 def death(tailX, tailY, x, y):
@@ -65,16 +69,9 @@ def death(tailX, tailY, x, y):
         x = ScreenWidth / 2
         y = ScreenHeight / 2
         print("Snake reset.")
-        message("Snake reset.", red)
 
 
     return(tailX, tailY, x, y)
-
-fontStyle = pygame.font.SysFont(None, 50)
-
-def message(m, c):
-    mes = fontStyle.render(m, True, c)
-    screen.blit(m, [ScreenWidth/2, ScreenHeight/2])
 
 def spawnapple():
     appleX = random.randint(20, 380)
@@ -87,16 +84,7 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
-        
-        if event.type == pygame.MOUSEMOTION:
-            posx = event.pos[0]
-            print("mouse pos x", posx)
-            posy = event.pos[1]
-            print("mouse pos x", posx)
-        
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print("click")
-        
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 velY = snakeSpeed*-1
@@ -117,13 +105,14 @@ while not done:
     screen.fill(white)
     x = x + velX
     y = y + velY
-    snake = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
-    snakeHead = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
+    #snake = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
+    #snakeHead = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
     apple = pygame.draw.circle(screen, red, (appleX, appleY), radius, 0)
 
     if (abs(x - appleX) < 10) and (abs(y - appleY) < 10):
         appleX = 0
-        #Add a segment to the snake
+        totalTail += 1
+    
 
 
 
