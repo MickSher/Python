@@ -58,6 +58,7 @@ def show(x, y, appleX, appleY):
     apple = pygame.draw.circle(screen, red, (appleX, appleY), radius, 0)
     for i in range(len(tailX) - 1):
         pygame.draw.rect(screen, blue, (tailX[i], tailY[i], 10, 10))
+    print(tailX, tailY)
 
 def sUpdate(x, y, appleX, appleY, tailX, tailY):
     for i in range(len(tailX) - 1):
@@ -130,9 +131,10 @@ while not done:
     if appleX == 0:
         appleX, appleY = spawnapple()
     tailX, tailY, x, y = death(tailX, tailY, x, y)
-    x, y, appleX, appleY = sUpdate(x, y, appleX, appleY, tailX, tailY)
+    x, y, appleX, appleY, tailX, tailY = sUpdate(x, y, appleX, appleY, tailX, tailY)
 
-    #show(x, y)
+    show(x, y, appleX, appleY)
+    
     
     
     
