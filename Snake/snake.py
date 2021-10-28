@@ -53,14 +53,24 @@ totalTail = 0
 
 #functions
 
-def show():
-    pass
-def sUpdate(x, y, appleX, appleY):
+def show(x, y, appleX, appleY):
     snake = pygame.draw.rect(screen, blue, (x, y, 10, 10), 3)
     apple = pygame.draw.circle(screen, red, (appleX, appleY), radius, 0)
     for i in range(len(tailX) - 1):
         pygame.draw.rect(screen, blue, (tailX[i], tailY[i], 10, 10))
-    return(x, y, appleX, appleY)
+
+def sUpdate(x, y, appleX, appleY, tailX, tailY):
+    for i in range(len(tailX) - 1):
+        tailX[i] = tailX[i + 1]
+        tailY[i] = tailY[i + 1]
+    if totalTail >= 1:
+        if len(tailX) < totalTail:
+            tailX.append(x)
+            tailY.append(y)
+        else:
+            tailX[totalTail - 1] = x
+            tailY[totalTail - 1] = y
+    return(x, y, appleX, appleY, tailX, tailY)
 
 def death(tailX, tailY, x, y):
     if (x > ScreenWidth - 1) or (x < 1) or (y > ScreenHeight - 1) or (y < 1):
@@ -112,7 +122,7 @@ while not done:
     if (abs(x - appleX) < 10) and (abs(y - appleY) < 10):
         appleX = 0
         totalTail += 1
-    
+        
 
 
 
@@ -120,7 +130,7 @@ while not done:
     if appleX == 0:
         appleX, appleY = spawnapple()
     tailX, tailY, x, y = death(tailX, tailY, x, y)
-    x, y, appleX, appleY = sUpdate(x, y, appleX, appleY)
+    x, y, appleX, appleY = sUpdate(x, y, appleX, appleY, tailX, tailY)
 
     #show(x, y)
     
