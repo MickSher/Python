@@ -13,8 +13,8 @@ blue = (0,0,128)
 black = (0,0,0)
 
 #screen or window size
-ScreenHeight = 800
-ScreenWidth = 800
+ScreenHeight = 400
+ScreenWidth = 400
 screen = pygame.display.set_mode((ScreenWidth, ScreenHeight))
 
 
@@ -53,25 +53,40 @@ totalTail = 0
 
 #functions
 
-def show(x, y, appleX, appleY):
+def show(x, y, appleX, appleY,  tailX, tailY):
     snake = pygame.draw.rect(screen, blue, (x, y, 10, 10), 3)
     apple = pygame.draw.circle(screen, red, (appleX, appleY), radius, 0)
     for i in range(len(tailX) - 1):
-        pygame.draw.rect(screen, blue, (tailX[i], tailY[i], 10, 10))
-    print(tailX, tailY)
+        pygame.draw.rect(screen, blue, (tailX[i], tailY[i], 10, 10), 0)
+    
 
-def sUpdate(x, y, appleX, appleY, tailX, tailY):
+def sUpdate(x, y, appleX, appleY, tailX, tailY, totalTail):
     for i in range(len(tailX) - 1):
         tailX[i] = tailX[i + 1]
         tailY[i] = tailY[i + 1]
+    if (abs(x - appleX) < 10) and (abs(y - appleY) < 10):
+        appleX = 0
+        totalTail += 1
     if totalTail >= 1:
         if len(tailX) < totalTail:
-            tailX.append(x)
-            tailY.append(y)
+            tailX.append(x + 10)
+            tailY.append(y + 10)
         else:
             tailX[totalTail - 1] = x
             tailY[totalTail - 1] = y
-    return(x, y, appleX, appleY, tailX, tailY)
+
+            
+    x = x + velX
+    y = y + velY
+
+    print(tailX, "x")
+    print(tailY, "y")
+    #apple eaten
+    #if (abs(x - appleX) < 10) and (abs(y - appleY) < 10):
+        #appleX = 0
+       # totalTail += 1
+    return(x, y, appleX, appleY, tailX, tailY, totalTail)
+
 
 def death(tailX, tailY, x, y):
     if (x > ScreenWidth - 1) or (x < 1) or (y > ScreenHeight - 1) or (y < 1):
@@ -79,7 +94,7 @@ def death(tailX, tailY, x, y):
         tailY = []
         x = ScreenWidth / 2
         y = ScreenHeight / 2
-        print("Snake reset.")
+        print("Snake Reset")
 
 
     return(tailX, tailY, x, y)
@@ -114,15 +129,12 @@ while not done:
     
     #fill the screen with a color
     screen.fill(white)
-    x = x + velX
-    y = y + velY
+    
     #snake = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
     #snakeHead = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
     apple = pygame.draw.circle(screen, red, (appleX, appleY), radius, 0)
-
-    if (abs(x - appleX) < 10) and (abs(y - appleY) < 10):
-        appleX = 0
-        totalTail += 1
+    
+    
         
 
 
@@ -131,9 +143,9 @@ while not done:
     if appleX == 0:
         appleX, appleY = spawnapple()
     tailX, tailY, x, y = death(tailX, tailY, x, y)
-    x, y, appleX, appleY, tailX, tailY = sUpdate(x, y, appleX, appleY, tailX, tailY)
+    x, y, appleX, appleY, tailX, tailY, totalTail = sUpdate(x, y, appleX, appleY, tailX, tailY, totalTail)
 
-    show(x, y, appleX, appleY)
+    show(x, y, appleX, appleY, tailX, tailY)
     
     
     
