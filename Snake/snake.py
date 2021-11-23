@@ -37,8 +37,8 @@ pygame.display.update()
 #set the clock
 clock=pygame.time.Clock()
 radius = 5
-snakeSpeed = 1
-velX = 1
+snakeSpeed = 10
+velX = snakeSpeed
 velY = 0
 done = False
 posx = ScreenWidth / 2
@@ -56,7 +56,7 @@ totalTail = 0
 def show(x, y, appleX, appleY,  tailX, tailY):
     snake = pygame.draw.rect(screen, blue, (x, y, 10, 10), 3)
     apple = pygame.draw.circle(screen, red, (appleX, appleY), radius, 0)
-    for i in range(len(tailX) - 1):
+    for i in range(len(tailX)):
         pygame.draw.rect(screen, blue, (tailX[i], tailY[i], 10, 10), 0)
     
 
@@ -69,8 +69,8 @@ def sUpdate(x, y, appleX, appleY, tailX, tailY, totalTail):
         totalTail += 1
     if totalTail >= 1:
         if len(tailX) < totalTail:
-            tailX.append(x + 10)
-            tailY.append(y + 10)
+            tailX.append(x)
+            tailY.append(y)
         else:
             tailX[totalTail - 1] = x
             tailY[totalTail - 1] = y
@@ -79,8 +79,8 @@ def sUpdate(x, y, appleX, appleY, tailX, tailY, totalTail):
     x = x + velX
     y = y + velY
 
-    print(tailX, "x")
-    print(tailY, "y")
+    
+    
     #apple eaten
     #if (abs(x - appleX) < 10) and (abs(y - appleY) < 10):
         #appleX = 0
@@ -88,20 +88,33 @@ def sUpdate(x, y, appleX, appleY, tailX, tailY, totalTail):
     return(x, y, appleX, appleY, tailX, tailY, totalTail)
 
 
-def death(tailX, tailY, x, y):
+def death(tailX, tailY, x, y, totalTail):
     if (x > ScreenWidth - 1) or (x < 1) or (y > ScreenHeight - 1) or (y < 1):
         tailX = []
         tailY = []
         x = ScreenWidth / 2
         y = ScreenHeight / 2
-        print("Snake Reset")
+        totalTail = 0
+    for i in range(len(tailX)):
+        positionX = tailX[i]
+        positionY = tailY[i]
+        if (abs(x - positionX) < 1) and (abs(y - positionY) < 1):
+            tailX = []
+            tailY = []
+            x = ScreenWidth / 2
+            y = ScreenHeight / 2
+            totalTail = 0
+            break
+        
 
 
-    return(tailX, tailY, x, y)
+
+
+    return(tailX, tailY, x, y, totalTail)
 
 def spawnapple():
-    appleX = random.randint(20, 380)
-    appleY = random.randint(20, 380)
+    appleX = random.randint(20, ScreenWidth - 20)
+    appleY = random.randint(20, ScreenHeight - 20)
     return appleX, appleY
 
 appleX, appleY = spawnapple()
@@ -132,7 +145,7 @@ while not done:
     
     #snake = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
     #snakeHead = pygame.draw.rect(screen, blue, (x, y, 10, 5), 3)
-    apple = pygame.draw.circle(screen, red, (appleX, appleY), radius, 0)
+    
     
     
         
@@ -140,10 +153,12 @@ while not done:
 
 
     #snake interaction with apple
+    
+    tailX, tailY, x, y, totalTail = death(tailX, tailY, x, y, totalTail)
+    x, y, appleX, appleY, tailX, tailY, totalTail = sUpdate(x, y, appleX, appleY, tailX, tailY, totalTail)
+
     if appleX == 0:
         appleX, appleY = spawnapple()
-    tailX, tailY, x, y = death(tailX, tailY, x, y)
-    x, y, appleX, appleY, tailX, tailY, totalTail = sUpdate(x, y, appleX, appleY, tailX, tailY, totalTail)
 
     show(x, y, appleX, appleY, tailX, tailY)
     
@@ -154,6 +169,6 @@ while not done:
     #rework what is on the screen blit, etc.
     #refresh the screen
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(10)
 
 sys.exit()
